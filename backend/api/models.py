@@ -22,7 +22,6 @@ class Problem(models.Model):
     problem_difficulty = models.CharField(
         max_length=20, choices=difficulty_choice, default="Easy"
     )
-    status = models.BooleanField(default=False)
     problem_link = models.URLField(max_length=250, blank=False)
 
     def __str__(self) -> str:
@@ -38,3 +37,14 @@ class Note(models.Model):
 
     def __str__(self) -> str:
         return f"{self.title}"
+
+class Status(models.Model):
+    problem_id = models.ForeignKey(Problem, on_delete=models.CASCADE)
+    status = models.BooleanField(default=False)
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def __str__(self) -> str:
+        return f"{self.status}"
+    
+    class Meta:
+        verbose_name_plural = "Status"

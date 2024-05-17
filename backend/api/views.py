@@ -30,8 +30,7 @@ class HomeView(generics.ListAPIView):
 
 class ProblemView(generics.ListAPIView):
     serializer_class = ProblemSerializer
-    # permission_classes = [IsAuthenticated]
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         problem_set_id = self.kwargs.get("id")

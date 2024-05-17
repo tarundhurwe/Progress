@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from .models import Problem, ProblemList, Note
+from .models import Problem, ProblemList, Note, Status
 from django.core.exceptions import ValidationError
 
 
@@ -39,7 +39,6 @@ class ProblemSerializer(serializers.ModelSerializer):
             "problem_set_id",
             "problem_name",
             "problem_type",
-            "status",
             "problem_link",
         ]
 
@@ -49,3 +48,8 @@ class NoteSerializer(serializers.ModelSerializer):
         model = Note
         fields = ["title", "content", "updated_at", "problem_id", "author"]
         extra_kwargs = {"author": {"read_only": True}}
+
+class StatusSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Status
+        fields = ["problem_id", "status", "user_id"]
