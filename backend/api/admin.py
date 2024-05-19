@@ -3,7 +3,26 @@ from .models import ProblemList, Problem, Note, Status
 
 
 # Register your models here.
-admin.site.register(ProblemList)
-admin.site.register(Problem)
-admin.site.register(Note)
-admin.site.register(Status)
+@admin.register(Status)
+class StatusAdmin(admin.ModelAdmin):
+    list_display = ["problem_id", "problem_set_id", "status", "user_id"]
+
+
+@admin.register(Problem)
+class ProblemAdmin(admin.ModelAdmin):
+    list_display = [
+        "problem_set_id",
+        "problem_name",
+        "problem_type",
+        "problem_difficulty",
+    ]
+
+
+@admin.register(ProblemList)
+class ProblemListAdmin(admin.ModelAdmin):
+    list_display = ["problem_set_name", "author", "link"]
+
+
+@admin.register(Note)
+class NoteAdmin(admin.ModelAdmin):
+    list_display = ["title", "content", "updated_at", "problem_id", "author"]

@@ -7,6 +7,7 @@ import Notes from "./pages/Notes"
 import NotFound from "./pages/NotFound"
 import ProblemList from "./pages/ProblemList"
 import ProtectedRoute from "./components/ProtectedRoute"
+import NavBar from "./pages/NavBar"
 
 function Logout() {
   localStorage.clear()
@@ -23,12 +24,13 @@ function App() {
   return (
     <>
       <BrowserRouter>
+        <NavBar />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/logout" element={<Logout />} />
           <Route path="/register" element={<RegisterAndLogout />} />
-          <Route exact path="/problems/:problem_set_id" element={<ProblemList />} />
+          <Route exact path="/problems/:problem_set_id" element={<ProtectedRoute><ProblemList /></ProtectedRoute>} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

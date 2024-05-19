@@ -44,7 +44,6 @@ const Form = ({ route, method }) => {
 
     return (
         <>
-            <NavBar />
             {method === "Login" ? (
                 <div className="container-div">
                     <div className="form-div">

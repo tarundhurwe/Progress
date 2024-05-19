@@ -6,20 +6,23 @@ from .serializers import (
     ProblemListSerializer,
     ProblemSerializer,
     NoteSerializer,
+    StatusSerializer,
 )
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from .models import ProblemList, Problem, Note
+from .models import ProblemList, Problem, Note, Status
 
 # Create your views here.
 
 
+# working perfectly
 class CreateUserView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [AllowAny]
 
 
+# working perfectly
 class HomeView(generics.ListAPIView):
     serializer_class = ProblemListSerializer
     permission_classes = [AllowAny]
@@ -28,6 +31,7 @@ class HomeView(generics.ListAPIView):
         return ProblemList.objects.all()
 
 
+# working perfectly
 class ProblemView(generics.ListAPIView):
     serializer_class = ProblemSerializer
     permission_classes = [IsAuthenticated]
@@ -48,6 +52,7 @@ class ProblemView(generics.ListAPIView):
         return Response(serializer.data)
 
 
+#  need to check
 class CreateNoteView(generics.CreateAPIView):
     serializer_class = NoteSerializer
     permission_classes = [IsAuthenticated]
@@ -64,6 +69,7 @@ class CreateNoteView(generics.CreateAPIView):
             return Response({"Error": serializer.errors})
 
 
+# do not use this one for now
 class MarkedProblemsView(generics.UpdateAPIView):
     serializer_class = ProblemSerializer
     permission_classes = [AllowAny]
@@ -78,3 +84,13 @@ class MarkedProblemsView(generics.UpdateAPIView):
         problem.save()
         serializer = self.get_serializer(problem)
         return Response(serializer.data)
+
+
+class UserMarkedProblemsView(generics.ListAPIView):
+    serializer_class = StatusSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        problem_set_id = self.kwargs.get("problem_set_id")
+        return Status.objects.filter(user_id=user, problem_set_id=problem_set_id)

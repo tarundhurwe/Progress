@@ -38,13 +38,17 @@ class Note(models.Model):
     def __str__(self) -> str:
         return f"{self.title}"
 
+
 class Status(models.Model):
     problem_id = models.ForeignKey(Problem, on_delete=models.CASCADE)
+    problem_set_id = models.ForeignKey(
+        ProblemList, on_delete=models.CASCADE, default=None
+    )
     status = models.BooleanField(default=False)
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self) -> str:
-        return f"{self.status}"
-    
+        return f"{self.problem_id}"
+
     class Meta:
         verbose_name_plural = "Status"

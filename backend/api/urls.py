@@ -15,4 +15,9 @@ urlpatterns = [
         views.MarkedProblemsView.as_view(),
         name="mark",
     ),
+    path(
+        "problems/marked/<int:problem_set_id>",
+        views.UserMarkedProblemsView.as_view(),
+        name="marked problems",
+    ),
 ]
