@@ -43,7 +43,6 @@ const ProblemList = () => {
   };
 
   function toggle(pos) {
-    console.log(pos);
     let ele = document.getElementById(pos);
     let original = window.getComputedStyle(ele, null).getPropertyValue("color");
     if (original === "rgb(0, 128, 0)") {
@@ -52,6 +51,14 @@ const ProblemList = () => {
       document.getElementById(pos).style.color = "green";
     }
   }
+
+  const markProblem = (problem_id, pos) => {
+    api
+      .put(`/api/problems/mark/${problem_set_id}/${problem_id}`)
+      .then((res) => res.data)
+      .then((data) => toggle(pos))
+      .catch((err) => alert(err));
+  };
 
   return (
     <>
@@ -104,9 +111,10 @@ const ProblemList = () => {
                       height="24"
                       fill="none"
                       viewBox="0 0 24 24"
-                      onClick={() => toggle(index)}
+                      onClick={() => markProblem(e.problem_id, index)}
                     >
-                      {marked.hasOwnProperty(e.problem_id) ? (
+                      {marked.hasOwnProperty(e.problem_id) &&
+                      marked[e.problem_id] === true ? (
                         <path
                           stroke="currentColor"
                           id={index}
@@ -115,7 +123,6 @@ const ProblemList = () => {
                           strokeWidth="2"
                           d="M8.5 11.5 11 14l4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
                           style={{ color: "green" }}
-                          onClick={() => toggle(index)}
                         />
                       ) : (
                         <path
@@ -126,7 +133,6 @@ const ProblemList = () => {
                           strokeWidth="2"
                           d="M8.5 11.5 11 14l4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
                           style={{ color: "#D3D3D3" }}
-                          onClick={() => toggle(index)}
                         />
                       )}
                     </svg>

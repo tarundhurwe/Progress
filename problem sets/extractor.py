@@ -1,16 +1,16 @@
 import openpyxl as op
 from os.path import dirname, join
 
-path = join(dirname(__file__), "./Copy of Template Blind 75.xlsx")
+path = join(dirname(__file__), "./FINAL450.xlsx")
 wb = op.load_workbook(path).active
 
 ls = []
 for i in range(2, wb.max_row):
     k = []
-    for j in range(1, 4):
+    for j in range(1, 3):
         k.append(wb.cell(row=i, column=j).value)
-    k.append(wb.cell(row=i, column=3).hyperlink.target)
+    k.append(wb.cell(row=i, column=2).hyperlink.target)
     ls.append(k)
 
-with open("./problems.json", "w") as f:
+with open("./dsa450.json", "w") as f:
     f.write(str(ls))

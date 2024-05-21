@@ -11,13 +11,13 @@ urlpatterns = [
         name="create note",
     ),
     path(
-        "problems/mark/<int:problem_id>",
-        views.MarkedProblemsView.as_view(),
-        name="mark",
-    ),
-    path(
         "problems/marked/<int:problem_set_id>",
         views.UserMarkedProblemsView.as_view(),
         name="marked problems",
+    ),
+    path(
+        "problems/mark/<int:problem_set_id>/<int:problem_id>",
+        views.UpdateStatusView.as_view(),
+        name="mark",
     ),
 ]

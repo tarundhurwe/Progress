@@ -69,23 +69,7 @@ class CreateNoteView(generics.CreateAPIView):
             return Response({"Error": serializer.errors})
 
 
-# do not use this one for now
-class MarkedProblemsView(generics.UpdateAPIView):
-    serializer_class = ProblemSerializer
-    permission_classes = [AllowAny]
-
-    def get_queryset(self):
-        problem_id = self.kwargs.get("problem_id")
-        return Problem.objects.filter(problem_id=problem_id).first()
-
-    def put(self, request, *args, **kwargs):
-        problem = self.get_queryset()
-        problem.status = not problem.status
-        problem.save()
-        serializer = self.get_serializer(problem)
-        return Response(serializer.data)
-
-
+# Working perfectly
 class UserMarkedProblemsView(generics.ListAPIView):
     serializer_class = StatusSerializer
     permission_classes = [IsAuthenticated]
@@ -94,3 +78,27 @@ class UserMarkedProblemsView(generics.ListAPIView):
         user = self.request.user
         problem_set_id = self.kwargs.get("problem_set_id")
         return Status.objects.filter(user_id=user, problem_set_id=problem_set_id)
+
+
+class UpdateStatusView(generics.UpdateAPIView):
+    serializer_class = StatusSerializer
+    permission_classes = [IsAuthenticated]
+
+    def put(self, request, *args, **kwargs):
+        problem_id = self.kwargs.get("problem_id")
+        problem_set_id = self.kwargs.get("problem_set_id")
+        user = self.request.user
+        problem = Problem.objects.get(problem_id=problem_id)
+        problem_set = ProblemList.objects.get(problem_set_id=problem_set_id)
+
+        status_instance, created = Status.objects.get_or_create(
+            user_id=user, problem_id=problem, problem_set_id=problem_set
+        )
+        if created:
+            status_instance.status = True
+        else:
+            status_instance.status = not status_instance.status
+
+        status_instance.save()
+
+        return Response(self.serializer_class(status_instance).data)

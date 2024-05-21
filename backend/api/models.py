@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 class ProblemList(models.Model):
-    problem_set_id = models.AutoField(primary_key=True, default=0)
+    problem_set_id = models.AutoField(primary_key=True)
     problem_set_name = models.CharField(max_length=250, blank=False)
     author = models.CharField(max_length=250)
     link = models.URLField(max_length=250, blank=True, unique=True)
