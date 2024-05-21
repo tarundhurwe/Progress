@@ -1,9 +1,20 @@
-import React from 'react'
+import React from "react";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
+import { useState } from "react";
+import "../assets/css/notes.css";
 
 const Notes = () => {
-    return (
-        <div>Notes</div>
-    )
-}
+  const [editorValue, setEditorValue] = useState("");
 
-export default Notes
+  return (
+    <>
+      <ReactQuill
+        value={editorValue}
+        onChange={(value) => setEditorValue(value)}
+      />
+    </>
+  );
+};
+
+export default Notes;

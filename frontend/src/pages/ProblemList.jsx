@@ -138,12 +138,12 @@ const ProblemList = () => {
                     </svg>
                   </td>
                   <td className="px-6 py-4 text-right">
-                    <a
-                      href="#"
+                    <Link
+                      to={`/notes/${e.problem_id}`}
                       className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
                     >
                       Notes
-                    </a>
+                    </Link>
                   </td>
                 </tr>
               );
