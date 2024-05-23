@@ -40,7 +40,7 @@ function App() {
           />
           <Route
             exact
-            path="/notes/:problem_set_id"
+            path="/notes/:problem_id"
             element={
               <ProtectedRoute>
                 <Notes />

@@ -1,6 +1,5 @@
 from django.contrib.auth.models import User
 from rest_framework import generics
-from rest_framework.views import APIView
 from .serializers import (
     UserSerializer,
     ProblemListSerializer,
@@ -11,6 +10,7 @@ from .serializers import (
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from .models import ProblemList, Problem, Note, Status
+from django.shortcuts import get_object_or_404
 
 # Create your views here.
 
@@ -52,21 +52,49 @@ class ProblemView(generics.ListAPIView):
         return Response(serializer.data)
 
 
+class SingleProblemView(generics.RetrieveAPIView):
+    serializer_class = ProblemSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        problem_id = self.kwargs.get("problem_id")
+        return Problem.objects.get(problem_id=problem_id)
+
+
+class GetNoteView(generics.RetrieveAPIView):
+    serializer_class = NoteSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        problem_id = self.kwargs.get("problem_id")
+        user = self.request.user
+        problem = Problem.objects.get(problem_id=problem_id)
+        return Note.objects.get(author=user, problem_id=problem)
+
+
 #  need to check
 class CreateNoteView(generics.CreateAPIView):
     serializer_class = NoteSerializer
     permission_classes = [IsAuthenticated]
 
-    def get_queryset(self):
+    def post(self, request, *args, **kwargs):
         problem_id = self.kwargs.get("problem_id")
         user = self.request.user
-        return Note.objects.filter(author=user, problem_id=problem_id)
+        data = request.data
 
-    def perform_create(self, serializer):
-        if serializer.is_valid():
-            serializer.save(author=self.request.user)
-        else:
-            return Response({"Error": serializer.errors})
+        problem = get_object_or_404(Problem, problem_id=problem_id)
+
+        note, created = Note.objects.get_or_create(
+            author=user,
+            problem_id=problem,
+            defaults={"title": data.get("title"), "content": data.get("content")},
+        )
+        if not created:
+            note.title = data.get("title", note.title)
+            note.content = data.get("content", note.content)
+            note.save()
+            return Response(self.get_serializer(note).data)
+        return Response(self.get_serializer(note).data)
 
 
 # Working perfectly
@@ -80,6 +108,7 @@ class UserMarkedProblemsView(generics.ListAPIView):
         return Status.objects.filter(user_id=user, problem_set_id=problem_set_id)
 
 
+# Working perfectly
 class UpdateStatusView(generics.UpdateAPIView):
     serializer_class = StatusSerializer
     permission_classes = [IsAuthenticated]
