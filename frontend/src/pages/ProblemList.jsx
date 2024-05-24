@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import api from "../api";
 import "../assets/css/problemSet.css";
+import NavBar from "./NavBar";
 
 const ProblemList = () => {
   const { problem_set_id } = useParams();
@@ -12,12 +13,15 @@ const ProblemList = () => {
     getProblems();
   }, []);
 
-  const getProblems = () => {
-    api
-      .get(`/api/problems/${problem_set_id}`)
-      .then((res) => res.data)
-      .then((data) => setProblems(data))
-      .catch((err) => alert(err));
+  const getProblems = async () => {
+    try {
+      const response = await api.get(`/api/problems/${problem_set_id}`);
+      if (response !== null) {
+        setProblems(response.data);
+      }
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   useEffect(() => {
@@ -62,6 +66,7 @@ const ProblemList = () => {
 
   return (
     <>
+      <NavBar />
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg problem-set">
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">

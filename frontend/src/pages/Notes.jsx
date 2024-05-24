@@ -5,6 +5,7 @@ import { useState } from "react";
 import "../assets/css/notes.css";
 import { useParams } from "react-router-dom";
 import api from "../api";
+import NavBar from "./NavBar";
 
 const Notes = () => {
   const [editorValue, setEditorValue] = useState("");
@@ -16,12 +17,15 @@ const Notes = () => {
     getProblem();
   }, []);
 
-  const getProblem = () => {
-    api
-      .get(`/api/problems/individual/${problem_id}`)
-      .then((res) => res.data)
-      .then((data) => setProblem(data))
-      .catch((err) => alert(err));
+  const getProblem = async () => {
+    try {
+      const response = await api.get(`/api/problems/individual/${problem_id}`);
+      if (response !== null) {
+        setProblem(response.data);
+      }
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   useEffect(() => {
@@ -59,6 +63,7 @@ const Notes = () => {
 
   return (
     <>
+      <NavBar />
       <div className="relative overflow-x-auto mb-5 desc">
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">

@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import api from "../api";
 import ProblemSetList from "./ProblemSetList";
 import FailureBanner from "./FailureBanner";
+import NavBar from "./NavBar";
 
 const Home = () => {
   const [problemsList, setProblemList] = useState([]);
@@ -23,6 +24,7 @@ const Home = () => {
 
   return (
     <>
+      <NavBar />
       <ProblemSetList problemset={problemsList} />
     </>
   );
