@@ -15,6 +15,7 @@ from datetime import timedelta
 from corsheaders.defaults import default_headers
 import os
 from dotenv import load_dotenv
+import dj_database_url
 
 load_dotenv()
 
@@ -26,12 +27,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-4h1_2jx%+*o=5$+6d1yuclj11m6)q#e74!lit6p^mpw_=1i%z+"
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS").split(" ")
 
 
 # Application definition
@@ -83,16 +84,6 @@ WSGI_APPLICATION = "backend.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.postgresql",
-#         "NAME": os.getenv("DB_NAME"),
-#         "USER": os.getenv("DB_USER"),
-#         "PASSWORD": os.getenv("DB_PWD"),
-#         "HOST": os.getenv("DB_HOST"),
-#         "PORT": os.getenv("DB_PORT"),
-#     }
-# }
 
 DATABASES = {
     "default": {
@@ -100,6 +91,8 @@ DATABASES = {
         "NAME": BASE_DIR / "db.sqlite3",
     }
 }
+
+DATABASES["default"] = dj_database_url.parse(os.environ.get("DATABASE_URL"))
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
@@ -164,14 +157,14 @@ CORS_ALLOW_HEADERS = list(default_headers) + [
     "access-control-allow-headers",  # this one is important
 ]
 
-CSRF_TRUSTED_ORIGINS = [
-    "http://localhost:8000",
-    "http://localhost:5173",
-    "http://192.168.1.25:5173",
-]
+# CSRF_TRUSTED_ORIGINS = [
+#     "http://localhost:8000",
+#     "http://localhost:5173",
+#     "http://192.168.1.25:5173",
+# ]
 
-CORS_ORIGIN_WHITELIST = [
-    "http://localhost:8000",
-    "http://localhost:5173",
-    "http://192.168.1.25:5173",
-]
+# CORS_ORIGIN_WHITELIST = [
+#     "http://localhost:8000",
+#     "http://localhost:5173",
+#     "http://192.168.1.25:5173",
+# ]
